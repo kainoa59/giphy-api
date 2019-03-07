@@ -80,7 +80,7 @@
                             gifImage = $("<img>");
                             
                             gifImage.addClass("gifs")
-                            
+
                             gifImage.attr("src", results[i].images.fixed_height_small.url);
 
                             gifImage.attr("data-still", results[i].images.fixed_height_small_still.url);
@@ -101,7 +101,7 @@
             });
         }
         addButton();
-                // only my firt image will "pause", cant figure out what I should change the $("#gifs") to, or if i need to
+                // only my first image will "pause", cant figure out what I should change the $("#gifs") to, or if i need to
 
         $("#gifs").on("click", ".gifs", function () {
             console.log("hello");
