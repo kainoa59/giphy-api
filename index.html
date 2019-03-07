@@ -1,0 +1,123 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="container">
+        <form>
+            <div class="form-group">
+                <label for="new-gif">Enter any gif category you would like to see below and hit submit!</label>
+                <input class="form-control" id="new-gif" aria-describedby="emailHelp" placeholder="Enter search">
+            </div>
+            <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div id="buttons"></div>
+    <div id="gifs"></div>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script>
+        var topics = ["BMW", "Audi", "Honda", "Subaru"];
+        // My form is correctly logging the form input into my topics array,
+        // But I can't get my for loop to add the button
+        $("#submit").on("click", function (event) {
+            event.preventDefault();
+            topics.push($("#new-gif").val());
+            console.log(topics);
+            $("#buttons").empty();
+            addButton();
+        })
+
+        function addButton() {
+            for (var i = 0; i < topics.length; i++) {
+
+                var original = $("<button>");
+
+                original.addClass(topics[i]);
+
+                original.attr("data-name", topics[i]);
+
+                original.addClass("buttons");
+
+                original.text(topics[i]);
+
+                $("#buttons").append(original);
+            };
+
+
+
+            $(".buttons").on("click", function buttonInfo() {
+                var car = $(this).attr("data-name");
+                var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + car + "&api_key=vF8ly6u6dcVW1dC8nfRA7cL85AltogXm&limit=10";
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                })
+                    .then(function (response) {
+                        console.log(queryURL);
+
+                        console.log(response);
+                        results = response.data;
+
+                        $("#gifs").empty();
+
+                        for (var i = 0; i < results.length; i++) {
+
+                            var gifDiv = $("<div>");
+
+                            var p = $("<p>").text("Rating: " + results[i].rating);
+
+                            gifImage = $("<img>");
+                            
+                            gifImage.addClass("gifs")
+                            
+                            gifImage.attr("src", results[i].images.fixed_height_small.url);
+
+                            gifImage.attr("data-still", results[i].images.fixed_height_small_still.url);
+
+                            gifImage.attr("data-animate", results[i].images.fixed_height_small.url);
+
+                            gifImage.attr("data-state", "animate");
+
+
+                            gifDiv.append(p)
+                            gifDiv.append(gifImage);
+
+                            $("#gifs").prepend(gifDiv);
+
+                            console.log(gifDiv);
+                        }
+                    });
+            });
+        }
+        addButton();
+                // only my firt image will "pause", cant figure out what I should change the $("#gifs") to, or if i need to
+
+        $("#gifs").on("click", ".gifs", function () {
+            console.log("hello");
+            console.log(gifImage.attr("data-state"));
+            var state = $(gifImage).attr('data-state');
+            if (state == 'still') {
+                $(gifImage).attr('src', $(gifImage).data('animate'));
+                $(gifImage).attr('data-state', 'animate');
+            } else {
+                $(gifImage).attr('src', $(gifImage).data('still'));
+                $(gifImage).attr('data-state', 'still');
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>
